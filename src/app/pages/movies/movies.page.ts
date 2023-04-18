@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, LoadingController } from '@ionic/angular';
+import { InfiniteScrollCustomEvent, IonicModule, LoadingController } from '@ionic/angular';
 import { MovieService } from 'src/app/services/movie.service';
 import { environment } from 'src/environments/environment';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-movies',
   templateUrl: './movies.page.html',
   styleUrls: ['./movies.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, RouterLinkActive, RouterLink]
 })
 export class MoviesPage implements OnInit {
   movies:any = [];
@@ -23,7 +24,7 @@ export class MoviesPage implements OnInit {
     this.loadMovies();
   }
 
-  async loadMovies() {
+  async loadMovies(event?: InfiniteScrollCustomEvent) {
     const loading = await this.loadingCtrl.create({
       message: "Loading...",
       spinner: "bubbles",
@@ -33,9 +34,20 @@ export class MoviesPage implements OnInit {
 
     this.movieService.getTopRatedMovies(this.currentPage).subscribe(res => {
       loading.dismiss();
-      this.movies = [...this.movies, ...res.results];
+      // this.movies = [...this.movies, ...res.results];
+      this.movies.push(...res.results);
       console.log(res);
-    })
+
+      event?.target.complete();
+      if(event) {
+        event.target.disabled = res.total_pages === this.currentPage;
+      }
+    });
   }
+
+loadMore(event:any) {
+  this.currentPage++;
+  this.loadMovies(event);
+}
 
 }

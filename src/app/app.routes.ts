@@ -1,4 +1,5 @@
-import { Routes } from '@angular/router';
+import { NgModel } from '@angular/forms';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 
 export const routes: Routes = [
   
