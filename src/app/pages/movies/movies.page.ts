@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, LoadingController } from '@ionic/angular';
 import { MovieService } from 'src/app/services/movie.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-movies',
@@ -14,6 +15,7 @@ import { MovieService } from 'src/app/services/movie.service';
 export class MoviesPage implements OnInit {
   movies:any = [];
   currentPage = 1;
+  imageBaseUrl = environment.images;
 
   constructor(private movieService: MovieService, private loadingCtrl: LoadingController) { }
 
